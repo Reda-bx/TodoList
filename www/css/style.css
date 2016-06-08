@@ -1,0 +1,51 @@
+/* Empty. Add your own CSS if you like */
+
+.done-true {
+  text-decoration: line-through;
+  color: grey;
+}
+input::-webkit-input-placeholder {
+  color: #9498A3;
+  font-style: italic;
+}
+.item.item-input {
+  background-color: #F2F3F7;
+}
+#filter {
+  width: 100%;
+}
+.myStuff {
+  background: #9b59b6;
+}
+.workStuff {
+  background: #e67e22
+}
+.gangsta{
+  background: #c0392b
+}
+#filter > h4 {
+  color: rgba(0, 0, 0, .4);
+  margin: 0;
+  display: inline-block;
+  width: 30%;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 400
+}
+#filter> h4 span {
+  font-size: 12px
+}
+.active {
+  font-weight: bold;
+  color: #fff !important;
+  border-bottom: 1px solid #fff;
+}
+.time i {
+  color: #e74c3c;
+}
+.time {
+  font-size: 12px
+}
+.text {
+  font-size: 18px
+}

@@ -1,0 +1,28 @@
+<ion-view view-title="TodoList">
+  <ion-content>
+    <div ng-controller="workStuff as todoList">
+      <div id="filter" class="workStuff" ng-init="selectedTab = 'all'">
+        <h4 ng-class="{'active':selectedTab === 'all'}" ng-click="filters.done = ''; selectedTab = 'all'" class="padding-vertical">All <span>( {{todoList.todos.length}} )</span></h4>
+
+        <h4 ng-class="{'active':selectedTab === 'active'}" ng-click="filters.done = 'false'; selectedTab = 'active'" class="padding-vertical">Active <span>( {{todoList.remaining()}} )</span></h4>
+
+        <h4 ng-class="{'active':selectedTab === 'finished'}" ng-click="filters.done = 'true'; selectedTab = 'finished'" class="padding-vertical">Finished <span>( {{todoList.todos.length - todoList.remaining()}} )</span></h4>
+      </div>
+
+      <form ng-submit="todoList.addTodo()">
+        <label class="item item-input">
+          <i class="icon ion-quote placeholder-icon"></i>
+          <input ng-model="todoList.todoText" type="text" placeholder="What shit needs to get done ?">
+        </label>
+      </form>
+      <ion-list>
+        <ion-checkbox ng-click="todoList.check(todo.id)" ng-repeat="todo in todoList.todos | filter:filters" ng-model="todo.done" class="done-{{todo.done}}">
+          <div class="text">{{todo.id}} {{todo.text}}</div>
+          <div ng-if="!todo.done" class="time">
+            <i class="ion-clock"></i> in {{todo.time}}
+          </div>
+        </ion-checkbox>
+      </ion-list>
+    </div>
+  </ion-content>
+</ion-view>
