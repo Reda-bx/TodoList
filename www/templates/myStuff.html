@@ -16,11 +16,12 @@
         </label>
       </form>
       <ion-list>
-        <ion-checkbox ng-click="todoList.check(todo.id)" ng-repeat="todo in todoList.todos | filter:filters" ng-model="todo.done" class="done-{{todo.done}}">
-          <div class="text">{{todo.id}} {{todo.text}}</div>
-          <div ng-if="!todo.done" class="time">
+        <ion-checkbox ng-repeat="todo in todoList.todos | filter:filters" ng-model="todo.done" class="done-{{todo.done}}">
+          <div class="text">{{todo.description}}</div>
+          <!-- TODO:  check ng-if="!todo.done" later -->
+          <div class="time">
             <i class="ion-clock"></i>
-            in {{todo.time}}
+            in {{todo.time}} <!-- TODO: GET rid of it asap -->
           </div>
         </ion-checkbox>
       </ion-list>

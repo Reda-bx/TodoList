@@ -16,8 +16,8 @@
         </label>
       </form>
       <ion-list>
-        <ion-checkbox ng-click="todoList.check(todo.id)" ng-repeat="todo in todoList.todos | filter:filters" ng-model="todo.done" class="done-{{todo.done}}">
-          <div class="text">{{todo.id}} {{todo.text}}</div>
+        <ion-checkbox ng-click="todoList.check(todo.index)" ng-repeat="todo in todoList.todos | filter:filters" ng-model="todo.done" class="done-{{todo.done}}">
+          <div class="text">{{todo.text}}</div>
           <div ng-if="!todo.done" class="time">
             <i class="ion-clock"></i> in {{todo.time}}
           </div>
