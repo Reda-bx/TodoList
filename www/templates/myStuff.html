@@ -16,14 +16,15 @@
         </label>
       </form>
       <ion-list>
-        <ion-checkbox ng-click="todoList.update(todo.id, todo.done)" ng-repeat="todo in todoList.todos | filter:filters" ng-model="todo.done" class="done-{{todo.done}}">
-          <div class="text">{{todo.description}} {{todo.done}}</div>
-          <!-- TODO:  check ng-if="!todo.done" later -->
-          <div class="time">
-            <i class="ion-clock"></i>
-            in {{todo.time}} <!-- TODO: GET rid of it asap -->
-          </div>
-        </ion-checkbox>
+        <ion-item type="item-text-wrap" ng-repeat="todo in todoList.todos | filter:filters" >
+          <ion-checkbox ng-click="todoList.update(todo.id, todo.done)" ng-model="todo.done" class="done-{{todo.done}}">
+            <h2 class="done-{{todo.done}}" >{{todo.description}}</h2>
+            <p ng-if="!todo.done" class="time ion-clock"> in {{todo.time}}</p>
+          </ion-checkbox>
+          <ion-option-button class="button-assertive" ng-click="todoList.remove(todo.id)">
+            Delete
+          </ion-option-button>
+        </ion-item>
       </ion-list>
     </div>
   </ion-content>

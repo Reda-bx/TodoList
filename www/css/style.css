@@ -40,7 +40,7 @@ input::-webkit-input-placeholder {
   color: #fff !important;
   border-bottom: 1px solid #fff;
 }
-.time i {
+.ion-clock:before {
   color: #e74c3c;
 }
 .time {
@@ -48,4 +48,10 @@ input::-webkit-input-placeholder {
 }
 .text {
   font-size: 18px
+}
+.item-content{
+  padding: 0 50px 0 0 !important
+}
+label.item.item-checkbox {
+    border-right: 0;
 }

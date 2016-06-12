@@ -19,18 +19,20 @@ angular.module('starter.controllers', [])
   todoList.updateTodo();
 
   todoList.addTodo = function(){
-    if(todoList.todoText != null && todoList.todoText != ""){
+    if(todoList.todoText != null && todoList.todoText != ""){ // Check if value not equal to null and is not empty
       todo = {description: todoList.todoText, time: moment().format('hh:mm:ss'), done: false}
       todoList.todoText = '';
       Todo.add(todo);
-      todoList.updateTodo();
+      todoList.updateTodo(); // update todoList.todos after insert
     }else{
       console.log("Type something");
     }
   }
 
   todoList.update = function(id, done){
-    Todo.update(id, done);
+    const time = moment().format('hh:mm:ss');
+    Todo.update(id, done, time);
+    todoList.updateTodo(); // update todoList.todos after update the time
   }
 
   todoList.remaining = function(){
@@ -39,6 +41,11 @@ angular.module('starter.controllers', [])
       count += todo.done ? 0 : 1;
     });
     return count;
+  }
+
+  todoList.remove = function(id){
+    Todo.remove(id);
+    todoList.updateTodo();
   }
 })
 
