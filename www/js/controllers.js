@@ -1,41 +1,45 @@
 angular.module('starter.controllers', [])
 
-.controller('myStuff', function($scope, $cordovaSQLite, Data) {
+.controller('myStuff', function($scope, Todo) {
   var todoList = this;
-  // todoList.todos = [];
+  todoList.todos = [];
+  todoList.todos = null;
 
-  todoList.todos = Data.get();
 
-  todoList.addTodo = function() {
-    description = todoList.todoText;
-    time = moment().format('hh:mm:ss');
-    done = false;
-    var query = "INSERT INTO todos (description, time, done) VALUES (?,?,?)";
-    $cordovaSQLite.execute(db, query, [description, time, done]).then(function(res) {
-        console.log("INSERT ID -> " + res.insertId);
-    }, function (err) {
-        console.error(err);
-    });
+  todoList.updateTodo = function(){
+    Todo.all().then(function(todo){
+      todoList.todos = todo
+      angular.forEach(todoList.todos, function(todo) {
+        // Covert String to Boolean.
+        todo.done = todo.done == "true" ? true : false
+      });
+    })
+  }
 
-    todoList.todos.push({description: description, time: time, done:false});
-    todoList.todoText = '';
-  };
-  todoList.remaining = function() {
+  todoList.updateTodo();
+
+  todoList.addTodo = function(){
+    if(todoList.todoText != null && todoList.todoText != ""){
+      todo = {description: todoList.todoText, time: moment().format('hh:mm:ss'), done: false}
+      todoList.todoText = '';
+      Todo.add(todo);
+      todoList.updateTodo();
+    }else{
+      console.log("Type something");
+    }
+  }
+
+  todoList.update = function(id, done){
+    Todo.update(id, done);
+  }
+
+  todoList.remaining = function(){
     var count = 0;
     angular.forEach(todoList.todos, function(todo) {
-      if(todo.done){
-        count++
-      }
+      count += todo.done ? 0 : 1;
     });
     return count;
-  };
-  todoList.onChange = function(todoId){
-    Data.update(todoId);
   }
-  // todoList.check = function(todo){
-  //   todoList.todos[todo - 1 ].time = moment().format('hh:mm:ss')
-  // }
-
 })
 
 .controller('workStuff', function($scope, Chats) {

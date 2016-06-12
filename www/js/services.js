@@ -1,88 +1,55 @@
 angular.module('starter.services', [])
 
-.factory('Data', function($cordovaSQLite){
-  var todos = [];
-  var count = 0;
-  var query = "SELECT * FROM todos";
-  $cordovaSQLite.execute(db, query).then(function(res) {
-      if(res.rows.length > 0) {
-          for (var i = 0; i < res.rows.length; i++) {
-            todos.push(res.rows.item(i));
-          }
-      } else {
-          console.log("No results found");
-      }
-  }, function (err) {
-      console.error(err);
-  });
-  return {
-    get: function(){
-      return todos
-    },
-    update: function(todoId){
-      let bool;
-      $cordovaSQLite.execute(db, "SELECT done from todos where id = (?)", [todoId]).then(function(res){
-        bool = res.rows.item(0).done
+.factory('DataBase', function($cordovaSQLite, $q, $ionicPlatform){
+  var self = this;
 
-        let params = []
-        if(bool == true || bool == 'true'){
-          params = ['true', todoId]
-        }else{
-          params = ['false', todoId]
-        }
-        $cordovaSQLite.execute(db, "UPDATE todos set done = (?) where id = (?)", params)
+  // Handle q and potential errors
+
+  self.query = function(query, params){
+    params = params || [];
+    var q = $q.defer();
+
+    $ionicPlatform.ready(function(){
+      $cordovaSQLite.execute(db, query, params)
+      .then(function(res){
+        q.resolve(res);
+      }, function(err){
+        console.log(err);
+        q.reject(err)
       })
-
-      return "log"
-    }
+    })
+    return q.promise
   }
 
-})
-.factory('Chats', function() {
-  // Might use a resource here that returns a JSON array
+  // Process a result SEt
+  self.getAll = function(res){
+    var output = [];
 
-  // Some fake testing data
-  var chats = [{
-    id: 0,
-    name: 'Ben Sparrow',
-    lastText: 'You on your way?',
-    face: 'img/ben.png'
-  }, {
-    id: 1,
-    name: 'Max Lynx',
-    lastText: 'Hey, it\'s me',
-    face: 'img/max.png'
-  }, {
-    id: 2,
-    name: 'Adam Bradleyson',
-    lastText: 'I should buy a boat',
-    face: 'img/adam.jpg'
-  }, {
-    id: 3,
-    name: 'Perry Governor',
-    lastText: 'Look at my mukluks!',
-    face: 'img/perry.png'
-  }, {
-    id: 4,
-    name: 'Mike Harrington',
-    lastText: 'This is wicked good ice cream.',
-    face: 'img/mike.png'
-  }];
-
-  return {
-    all: function() {
-      return chats;
-    },
-    remove: function(chat) {
-      chats.splice(chats.indexOf(chat), 1);
-    },
-    get: function(chatId) {
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id === parseInt(chatId)) {
-          return chats[i];
-        }
-      }
-      return null;
+    for(var i=0; i < res.rows.length; i++){
+      output.push(res.rows.item(i));
     }
-  };
-});
+    return output;
+  }
+  return self
+})
+.factory('Todo', function($cordovaSQLite, DataBase){
+  var self = this;
+
+  self.all = function(){
+    return DataBase.query("SELECT * from todos")
+    .then(function(res){
+      return DataBase.getAll(res);
+    })
+  }
+
+  self.add = function(newTodo){
+    var params = [newTodo.description, newTodo.time, newTodo.done];
+    return DataBase.query("INSERT INTO todos (description, time, done) VALUES (?,?,?)", params);
+  }
+
+  self.update = function(id, done){
+    var params = [done, id];
+    return DataBase.query("UPDATE todos SET done = (?) WHERE id = (?)", params);
+  }
+  return self
+})
