@@ -1,5 +1,43 @@
 angular.module('starter.services', [])
 
+.factory('Data', function($cordovaSQLite){
+  var todos = [];
+  var count = 0;
+  var query = "SELECT * FROM todos";
+  $cordovaSQLite.execute(db, query).then(function(res) {
+      if(res.rows.length > 0) {
+          for (var i = 0; i < res.rows.length; i++) {
+            todos.push(res.rows.item(i));
+          }
+      } else {
+          console.log("No results found");
+      }
+  }, function (err) {
+      console.error(err);
+  });
+  return {
+    get: function(){
+      return todos
+    },
+    update: function(todoId){
+      let bool;
+      $cordovaSQLite.execute(db, "SELECT done from todos where id = (?)", [todoId]).then(function(res){
+        bool = res.rows.item(0).done
+
+        let params = []
+        if(bool == true || bool == 'true'){
+          params = ['true', todoId]
+        }else{
+          params = ['false', todoId]
+        }
+        $cordovaSQLite.execute(db, "UPDATE todos set done = (?) where id = (?)", params)
+      })
+
+      return "log"
+    }
+  }
+
+})
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
 

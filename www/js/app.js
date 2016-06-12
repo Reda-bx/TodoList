@@ -21,13 +21,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
     if (window.cordova) {
       db = $cordovaSQLite.openDB({ name : "todoDB.db"}); //device
     }else{
       db = window.openDatabase("todoDB.db", '1', 'my', 1024 * 1024 * 100); // browser
     }
 
-    $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS todos (id integer primary key, indexs integer, description text, time text, done BOOLEAN)");
+    $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS todos (id integer primary key, description text, time text, done text)");
     // $cordovaSQLite.execute(db, "DROP TABLE IF EXISTS todos");
   });
 })

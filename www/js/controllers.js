@@ -1,50 +1,37 @@
 angular.module('starter.controllers', [])
 
-.controller('myStuff', function($scope, $cordovaSQLite) {
+.controller('myStuff', function($scope, $cordovaSQLite, Data) {
   var todoList = this;
-  todoList.todos = [];
-  var query = "SELECT * FROM todos";
-  $cordovaSQLite.execute(db, query).then(function(res) {
-      if(res.rows.length > 0) {
-          for (var i = 0; i < res.rows.length; i++) {
-            // console.log(res.rows.item(i).description);
-            // console.log(res.rows.item(i));
-            todoList.todos.push(res.rows.item(i))
-          }
-      } else {
-          console.log("No results found");
-      }
-  }, function (err) {
-      console.error(err);
-  });
+  // todoList.todos = [];
+
+  todoList.todos = Data.get();
 
   todoList.addTodo = function() {
-    const index = todoList.todos.length + 1;
-
-    indexs = index;
     description = todoList.todoText;
     time = moment().format('hh:mm:ss');
     done = false;
-    var query = "INSERT INTO todos (indexs, description, time, done) VALUES (?,?,?,?)";
-    $cordovaSQLite.execute(db, query, [indexs, description, time, done]).then(function(res) {
+    var query = "INSERT INTO todos (description, time, done) VALUES (?,?,?)";
+    $cordovaSQLite.execute(db, query, [description, time, done]).then(function(res) {
         console.log("INSERT ID -> " + res.insertId);
     }, function (err) {
         console.error(err);
     });
 
-    todoList.todos.push({indexs: indexs, description: description, time: time, done:false});
+    todoList.todos.push({description: description, time: time, done:false});
     todoList.todoText = '';
   };
-
   todoList.remaining = function() {
     var count = 0;
-    // console.log(todoList.todos.length);
     angular.forEach(todoList.todos, function(todo) {
-      count += todo.done ? 0 : 1;
+      if(todo.done){
+        count++
+      }
     });
     return count;
   };
-  //
+  todoList.onChange = function(todoId){
+    Data.update(todoId);
+  }
   // todoList.check = function(todo){
   //   todoList.todos[todo - 1 ].time = moment().format('hh:mm:ss')
   // }
